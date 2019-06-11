@@ -1,9 +1,9 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-"""  A Tool to generate doc of source Files in given dir.  """
+"""  A Tool to add tag of a git repository.  """
 __author__ = 'luochenxun'
-__version__ = '1.3.0'
-__projectName__ = 'docMaker'
+__version__ = '1.0.0'
+__projectName__ = 'updateGitTag'
 
 import getopt
 import sys
@@ -22,10 +22,11 @@ import time
 
 def usage():
     """ Print the usage as help """
-    print("\n%s is a tool to add or modify the doc of source file. Version:%s ." %(__projectName__, __version__))
-    print("\nUsage: %s file | dir " % __projectName__)
+    print("\n%s is a tool to add tag of a git repository.. version:%s ." %(__projectName__, __version__))
+    print("\nUsage: %s tagVersion" % __projectName__)
     print("  -h            : print this usage.")
     print("  -v            : print the version of %s." % __projectName__)
+    print("\nFor more infomation of the cmd, you can use option as \'%s add -h\' for farther help." % __projectName__)
     print("")
     _exit()
 
@@ -38,21 +39,6 @@ M_PROJECT_SYS_BIN = '/usr/local/bin/' + __projectName__
 M_PROJECT_CONFIG = M_PROJECT_HOME + "config.json"
 M_PROJECT_MAIN_FILE = M_PROJECT_HOME + __projectName__
 
-
-
-class DocInfo:
-    projectName = ''
-    authorName = ''
-    organization = ''  # the project's organization
-    def __init__(self, projectName='', authorName='', organization=''):
-        '''Constructor.'''
-        self.projectName = projectName
-        self.authorName = authorName
-        self.organization = organization
-    def initFromInteractiveSystem(self):
-        self.projectName = raw_input('· Please input the project\'s name:\n-> ')
-        self.authorName = raw_input('· Please input the authorName:\n-> ')
-        self.organization = raw_input('· Please input the organization of your project:\n-> ')
 
 
 def initEnvironment():
@@ -109,56 +95,12 @@ def checkAndAutoUpdate(forceUpdate = False):
         _autoUpdate()
 
 
-def docSrc(path):
-    if not os.path.exists(path):
+def updateTag(tag):
+    if tag == None:
         usage()
-    docInfo = DocInfo()
-    docInfo.initFromInteractiveSystem()
-    if os.path.isdir(path):
-        docSrcInDir(path, docInfo)
-    else:
-        docSrcInFile(os.path.basename(path), path, docInfo)
-
-def docSrcInDir(dir, docInfo):
-    # 遍历替换
-    for parent, dirnames, filenames in os.walk(dir):
-        for filename in filenames:                        #输出文件信息
-            docSrcInFile(filename, os.path.join(parent, filename), docInfo)
-
-def docSrcInFile(filename, filepath, docInfo):
-    # iOS源码支持
-    if filename.endswith('.h') or filename.endswith('.m'):
-        rfp = open(filepath)
-        fp = open(filepath + '_tmp','w')  #打开你要写得文件test2.txt
-        lines = rfp.readlines()
-        newLines = []
-        newLines.append('//' + '\n')
-        newLines.append('// ' + filename + '\n')
-        newLines.append('// ' + docInfo.projectName + '\n')
-        newLines.append('//' + '\n')
-        newLines.append('// Created by ' + docInfo.authorName + ' on ' + time.strftime("%Y-%m-%d") + '\n')
-        newLines.append('// Copyright (c) %s年 %s. All rights reserved.' %(time.strftime('%Y'), docInfo.organization) + '\n')
-        docStart = False
-        docEnd = False
-        for s in lines:
-            # doc end
-            if docEnd == True:
-                newLines.append(s)
-                continue
-            # doc start
-            if docStart == False and s.strip().startswith('//'):
-                docStart = True
-                continue
-            if docStart == True and s.strip().startswith('//'):
-                continue
-            elif docStart == True:
-                docEnd = True
-            newLines.append(s)
-        fp.writelines(newLines)
-        fp.close
-        rfp.close
-        os.remove(filepath)
-        shutil.move(filepath + '_tmp', filepath)
+    os.system("git tag -d " + tag + " 1>/dev/null 2>/dev/null")
+    os.system("git push origin --tags 1>/dev/null 2>/dev/null")
+    os.system("git tag " + tag + " 1>/dev/null 2>/dev/null")
 
 def _autoUpdate():
     global M_PROJECT_MAIN_FILE, M_PROJECT_SYS_BIN
@@ -247,7 +189,7 @@ def _parseArgv():
         else:
             if not opts:
                 if len(args) > 0:
-                    docSrc(args[0])
+                    updateTag(args[0])
                 else:
                     usage()
                 return
