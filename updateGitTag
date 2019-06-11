@@ -56,7 +56,7 @@ def checkAndAutoUpdate(forceUpdate = False):
     currentTime = int(time.time())
     lastUpdateTime = int(gConfig["date"])
     HalfOneDay = 20 * 60 * 60
-    if gConfig[__projectName__] == None:
+    if __projectName__ not in gConfig:
         # update the src code
         homeDir = os.getcwd()
         os.chdir(M_PROJECT_HOME)
