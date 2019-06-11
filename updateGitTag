@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """  A Tool to add tag of a git repository.  """
 __author__ = 'luochenxun'
-__version__ = '1.3.0'
+__version__ = '1.4.0'
 __projectName__ = 'updateGitTag'
 
 import getopt
@@ -63,6 +63,12 @@ def checkAndAutoUpdate(forceUpdate = False):
         os.system("git clean -df 1>/dev/null 2>/dev/null;git reset --hard HEAD 1>/dev/null 2>/dev/null;git pull 1>/dev/null 2>/dev/null")
         os.chdir(homeDir)
         _autoUpdate()
+        newToolSrc = open(M_PROJECT_MAIN_FILE)
+        for line in newToolSrc:
+            match = re.match('__version__ = \'(.+)\'', line)
+            if match:
+                gConfig[__projectName__] = match.group(1)
+        _saveGolbalConfig(gConfig)
     elif (lastUpdateTime + HalfOneDay) < currentTime or forceUpdate:
         # update the src code
         homeDir = os.getcwd()
