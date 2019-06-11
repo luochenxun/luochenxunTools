@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """  A Tool to generate doc of source Files in given dir.  """
 __author__ = 'luochenxun'
-__version__ = '1.0.0'
+__version__ = '1.1.0'
 __projectName__ = 'docMaker'
 
 import getopt
@@ -72,7 +72,14 @@ def checkAndAutoUpdate(forceUpdate = False):
     currentTime = int(time.time())
     lastUpdateTime = int(gConfig["date"])
     HalfOneDay = 20 * 60 * 60
-    if (lastUpdateTime + HalfOneDay) < currentTime or forceUpdate:
+    if gConfig[__projectName__] == None:
+        # update the src code
+        homeDir = os.getcwd()
+        os.chdir(M_PROJECT_HOME)
+        os.system("git clean -df 1>/dev/null 2>/dev/null;git reset --hard HEAD 1>/dev/null 2>/dev/null;git pull 1>/dev/null 2>/dev/null")
+        os.chdir(homeDir)
+        _autoUpdate()
+    elif (lastUpdateTime + HalfOneDay) < currentTime or forceUpdate:
         # update the src code
         homeDir = os.getcwd()
         os.chdir(M_PROJECT_HOME)
@@ -104,8 +111,56 @@ def checkAndAutoUpdate(forceUpdate = False):
         _autoUpdate()
 
 
+def docSrc(path):
+    if not os.path.exists(path):
+        usage()
+    docInfo = DocInfo()
+    docInfo.initFromInteractiveSystem()
+    if os.path.isdir(path):
+        docSrcInDir(path, docInfo)
+    else:
+        docSrcInFile(os.path.basename(path), path, docInfo)
 
+def docSrcInDir(dir, docInfo):
+    # 遍历替换
+    for parent, dirnames, filenames in os.walk(dir):
+        for filename in filenames:                        #输出文件信息
+            docSrcInFile(filename, os.path.join(parent, filename), docInfo)
 
+def docSrcInFile(filename, filepath, docInfo):
+    # iOS源码支持
+    if filename.find('.h') != -1 or filename.find('.m') != -1:
+        rfp = open(filepath)
+        fp = open(filepath + '_tmp','w')  #打开你要写得文件test2.txt
+        lines = rfp.readlines()
+        newLines = []
+        newLines.append('//' + '\n')
+        newLines.append('// ' + filename + '\n')
+        newLines.append('// ' + docInfo.projectName + '\n')
+        newLines.append('//' + '\n')
+        newLines.append('// Created by ' + docInfo.authorName + ' on ' + time.strftime("%Y-%m-%d") + '\n')
+        newLines.append('// Copyright (c) %s年 %s. All rights reserved.' %(time.strftime('%Y'), docInfo.organization) + '\n')
+        docStart = False
+        docEnd = False
+        for s in lines:
+            # doc end
+            if docEnd == True:
+                newLines.append(s)
+                continue
+            # doc start
+            if docStart == False and s.strip().startswith('//'):
+                docStart = True
+                continue
+            if docStart == True and s.strip().startswith('//'):
+                continue
+            elif docStart == True:
+                docEnd = True
+            newLines.append(s)
+        fp.writelines(newLines)
+        fp.close
+        rfp.close
+        os.remove(filepath)
+        shutil.move(filepath + '_tmp', filepath)
 
 def _autoUpdate():
     global M_PROJECT_MAIN_FILE, M_PROJECT_SYS_BIN
@@ -193,7 +248,10 @@ def _parseArgv():
                 checkAndAutoUpdate(True)
         else:
             if not opts:
-                print('no opts')
+                if len(args) > 0:
+                    docSrc(args[0])
+                else:
+                    usage()
                 return
             for o, a in opts:
                 if o in ("-h", "--help"):
