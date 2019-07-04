@@ -134,7 +134,7 @@ def _readGlobalConfig():
             configText = configReader.read()
             configDic = json.loads(
                 configText, object_pairs_hook=collections.OrderedDict)
-        except Exception as e:
+        except Exception:
             _saveGlobalConfig(configDic)
         finally:
             configReader.close()

@@ -442,7 +442,7 @@ def _saveGlobalConfig(configDic):
     finally:
         configWritter.close()
 
-def parseArgv():
+def _parseArgv():
     if len(sys.argv) <= 1:
         usage()
         sys.exit(0)
