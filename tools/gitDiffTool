@@ -32,9 +32,9 @@ def usage():
   print "  -v|--version          : print the version"
   print '''
 Examples:
-    gitDiffTool.py -d 1234 6789       # compare tow commit
-    gitDiffTool.py -d 1234            # compare current branch with given commit
-    gitDiffTool.py -d develop         # compare current branch with given branch's name
+    gitDiffTool -d 1234 6789       # compare tow commit
+    gitDiffTool -d 1234            # compare current branch with given commit
+    gitDiffTool -d develop         # compare current branch with given branch's name
   '''
   print "\n"
   os._exit(0)
