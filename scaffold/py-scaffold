@@ -1,9 +1,9 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-"""  A Tool to add tag of a git repository.  """
+"""  Tool description.  """
 __author__ = 'luochenxun'
-__version__ = '1.4.0'
-__projectName__ = 'updateGitTag'
+__version__ = '1.0.4'
+__projectName__ = 'py-scaffold'
 
 import getopt
 import sys
@@ -22,8 +22,9 @@ import time
 
 def usage():
     """ Print the usage as help """
-    print("\n%s is a tool to add tag of a git repository.. version:%s ." %(__projectName__, __version__))
-    print("\nUsage: %s tagVersion" % __projectName__)
+    print("\n%s is a extensible tool to hook your git projects. version:%s ." %(__projectName__, __version__))
+    print("\nUsage: %s <cmd> [OPTIONS] [param]" % __projectName__)
+    print("  init          : init the environment of the project, write the config in ~/.%s" %__projectName__)
     print("  -h            : print this usage.")
     print("  -v            : print the version of %s." % __projectName__)
     print("\nFor more infomation of the cmd, you can use option as \'%s add -h\' for farther help." % __projectName__)
@@ -33,12 +34,11 @@ def usage():
 
 """ global variables """
 gConfig = None
-M_PROJECT_REPOSITORY = "https://github.com/luochenxun/pyTools.git"
+M_PROJECT_REPOSITORY = "https://github.com/luochenxun/luochenxunTools.git"
 M_PROJECT_HOME = os.environ['HOME'] + "/.luochenxunTools/"
 M_PROJECT_SYS_BIN = '/usr/local/bin/' + __projectName__
 M_PROJECT_CONFIG = M_PROJECT_HOME + "config.json"
-M_PROJECT_MAIN_FILE = M_PROJECT_HOME + __projectName__
-
+M_PROJECT_MAIN_FILE = M_PROJECT_HOME + 'tools/' + __projectName__
 
 
 def initEnvironment():
@@ -49,7 +49,7 @@ def initEnvironment():
     checkAndAutoUpdate()
 
 
-def checkAndAutoUpdate(forceUpdate = False):
+def checkAndAutoUpdate(forceUpdate=False):
     """ Check update half of day """
     global M_PROJECT_HOME, M_PROJECT_REPOSITORY, M_PROJECT_MAIN_FILE, M_PROJECT_SYS_BIN
     global gConfig
@@ -68,7 +68,7 @@ def checkAndAutoUpdate(forceUpdate = False):
             match = re.match('__version__ = \'(.+)\'', line)
             if match:
                 gConfig[__projectName__] = match.group(1)
-        _saveGolbalConfig(gConfig)
+        _saveGlobalConfig(gConfig)
     elif (lastUpdateTime + HalfOneDay) < currentTime or forceUpdate:
         # update the src code
         homeDir = os.getcwd()
@@ -96,22 +96,13 @@ def checkAndAutoUpdate(forceUpdate = False):
                     elif int(newToolVersionSplit[i]) < int(currentVersionSplit[i]):
                         break
                 break
-        _saveGolbalConfig(gConfig)
+        _saveGlobalConfig(gConfig)
     if not os.path.exists(M_PROJECT_SYS_BIN):
         _autoUpdate()
 
-
-def updateTag(tag):
-    if tag == None:
-        usage()
-    os.system("git tag -d " + tag + " 1>/dev/null 2>/dev/null")
-    os.system("git push origin --tags 1>/dev/null 2>/dev/null")
-    os.system("git tag " + tag)
-    os.system("git push origin --tags")
-
 def _autoUpdate():
     global M_PROJECT_MAIN_FILE, M_PROJECT_SYS_BIN
-    print('Install the new tool to /usr/local/bin/%s' % __projectName__)
+    print('Updating new version of %s to /usr/local/bin/%s' % (__projectName__, __projectName__))
     shutil.copy(M_PROJECT_MAIN_FILE, M_PROJECT_SYS_BIN)
     print('Success!')
 
@@ -121,7 +112,7 @@ def _readGlobalConfig():
     Config.json
     {
       version: current tool version
-      date: the newest time of theck update
+      date: the newest time of check update
     }
     """
     global M_PROJECT_CONFIG
@@ -136,26 +127,27 @@ def _readGlobalConfig():
         shutil.rmtree(M_PROJECT_HOME)
         os.system("git clone " + M_PROJECT_REPOSITORY + ' ' + M_PROJECT_HOME)
     if not os.path.exists(M_PROJECT_CONFIG):
-        _saveGolbalConfig(configDic)
+        _saveGlobalConfig(configDic)
     else:  # read the config
         configReader = open(M_PROJECT_CONFIG, 'r')
         try:
             configText = configReader.read()
-            configDic = json.loads(configText, object_pairs_hook=collections.OrderedDict)
+            configDic = json.loads(
+                configText, object_pairs_hook=collections.OrderedDict)
         except Exception as e:
-            _saveGolbalConfig(configDic)
+            _saveGlobalConfig(configDic)
         finally:
             configReader.close()
     return configDic
 
 
-def _saveGolbalConfig(configDic):
+def _saveGlobalConfig(configDic):
     '''
-    Save the given dic to the project's golbal config path:
+    Save the given dic to the project's global config path:
     Config.json
     {
       version: current tool version
-      date: the newest time of theck update
+      date: the newest time of check update
     }
     '''
     global M_PROJECT_CONFIG
@@ -182,7 +174,7 @@ def _parseArgv():
         sys.exit(0)
     try:
         cmd = _parseCmd(sys.argv[1], [
-            "update", "hook", "init", "clean", "list", "add", "remove", "clear", "make"
+            "update", "cmd1", "cmd2"
         ])
         opts, args = getopt.getopt(sys.argv[1:], "hv", ["help", "version"])
     except getopt.GetoptError as err:
@@ -193,12 +185,16 @@ def _parseArgv():
         if cmd:
             if cmd == "update":
                 checkAndAutoUpdate(True)
+            # if cmd == "cmd1":
+            #     cmd1(sys.argv[2:])
+            # if cmd == "cmd2":
+            #     cmd2()
         else:
             if not opts:
-                if len(args) > 0:
-                    updateTag(args[0])
-                else:
-                    usage()
+                # if len(args) > 0:
+                #     docSrc(args[0])
+                # else:
+                #     usage()
                 return
             for o, a in opts:
                 if o in ("-h", "--help"):
