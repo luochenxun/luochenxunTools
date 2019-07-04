@@ -3,17 +3,16 @@
 `luochenxunTools` is a set of tools written by myself to increase efficiency。
 
 tool name                 | desc                                                                                            | anchor
---------------------------|-------------------------------------------------------------------------------------------------|----------------------------
+--------------------------|-------------------------------------------------------------------------------------------------|--------------------------------------------------------
 Code Tools                | -                                                                                               | -
 docMaker                  | docMaker is a tool to add or modify the doc of source file                                      | [docMaker](#docmaker)
-                          |                                                                                                 |
 Git Tools                 | -                                                                                               | -
 gitDiffTool               | 'gitDiffTool' is a tool to compare two commits of a gitProject and generate the diff into html. | [gitDiffTool](#gitdifftool)
 updateGitTag              | updateGitTag is a tool to add tag of a git repository                                           | [updateGitTag](#updategittag)
-                          |                                                                                                 |
-Markdown Tools            |                                                                                                 | -
+Markdown Tools            | -                                                                                               | -
 markdown-number-md-header | number the markdown's header like : 1 , 1.1 , 1.2 .....                                         | [markdown-number-md-header](#markdown-number-md-header)
 
+## TOC
 
 <!-- TOC -->
 
