@@ -1,4 +1,4 @@
-# 1 Overview
+# Overview
 
 `luochenxunTools` is a set of tools written by myself to increase efficiency。
 
@@ -32,7 +32,7 @@ markdown-number-md-header | number the markdown's header like : 1 , 1.1 , 1.2 ..
 
 
 
-# 2 docMaker
+# docMaker
 
 docMaker is a tool to add or modify the doc of source file. Version:1.6.0 .
 
@@ -43,7 +43,7 @@ Usage: docMaker file | dir
 ```
 
 
-# 3 gitDiffTool
+# gitDiffTool
 
 'gitDiffTool' is a tool to compare two commits of a gitProject and generate the diff into html.
 You can read the diff in one html page, the list of modified files on one side and the specifics diff-content on the other.
@@ -62,7 +62,7 @@ Examples:
     gitDiffTool.py -d develop         # compare current branch with given branch's name
 ```
 
-# 4 updateGitTag
+# updateGitTag
 
 updateGitTag is a tool to add tag of a git repository.. version:1.4.0 .
 
@@ -74,18 +74,18 @@ Usage: updateGitTag tagVersion
 For more infomation of the cmd, you can use option as 'updateGitTag add -h' for farther help.
 ```
 
-# 5 markdown-number-md-header
+# markdown-number-md-header
 
 A NodeJS script to number the markdown's header like : 1 , 1.1 , 1.2 .....
 
 To run this script , you need a NodeJS environment to run , learn more : <https://github.com/nodejs/node>
 
-## 5.1 version
+## version
 
 V1.0.1 : Fix bug in codes, skip the # in codes <br>
 V1.0.0 : init version
 
-## 5.2 Install
+## Install
 
 1、clone the script
 
@@ -95,7 +95,7 @@ V1.0.0 : init version
 
 `sudo cp ./markdownNumberHeader.js /usr/local/bin`
 
-## 5.3 Brief
+## Brief
 
 This script is used to number the header of markdown-files as doc-numbers , like :
 
@@ -111,14 +111,14 @@ This script is used to number the header of markdown-files as doc-numbers , like
 You can use it to translate a markdown-file directly, or you can use it to a diretory.<br>
 When you use a diretory as a option of the script, it will traverse the diretory and its sub-diretory , and translate all the .md files it them.
 
-### 5.3.1 Usage :
+### Usage
 
 ```
 1\. markdownNumberHeader xxx/xxx/xxx.md
 2\. markdownNumberHeader xxx/xxx/Diretory
 ```
 
-## 5.4 中文简介
+## 中文简介
 
 markdown凭借其简单、方便、直接的写作方式，受到越来越多人的喜爱。
 
@@ -139,7 +139,7 @@ markdownNumberHeader.js 脚本就是解决这个问题的大救星~
 
 你可以使用它来转化你的 md文档（以 .md 为后缀），或是转化一个目录（它会自动遍历目录及其子目录里的所有md文档，并转化之）。
 
-### 5.4.1 使用方法 :
+### 使用方法 :
 
 ```
 1\. markdownNumberHeader xxx/xxx/xxx.md
