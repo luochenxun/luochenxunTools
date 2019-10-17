@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 """  A Tool to generate doc of source Files in given dir.  """
 __author__ = 'luochenxun'

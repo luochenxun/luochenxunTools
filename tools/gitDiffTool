@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 """  Code-Analysis tool of git project  """
 __author__ = 'luochenxun(luochenxun@gmail.com)'
@@ -25,18 +25,17 @@ import base64
 
 def usage():
   """Print usage of gitDiffTool."""
-  print "   \'gitDiffTool\' is a tool to compare two commits of a gitProject and generate the diff into html.\nYou can read the diff in one html page, the list of modified files on one side and the specifics diff-content on the other. "
-  print "\nUsage: %s [OPTIONS] [params]\n" % sys.argv[0]
-  print "  -d [sCommit] dCommit  : diff two commit(if given one diff with current commit), output the result using html"
-  print "  -h|--help             : print this usage"
-  print "  -v|--version          : print the version"
-  print '''
+  print("   \'gitDiffTool\' is a tool to compare two commits of a gitProject and generate the diff into html.\nYou can read the diff in one html page, the list of modified files on one side and the specifics diff-content on the other. ")
+  print("\nUsage: %s [OPTIONS] [params]\n" % sys.argv[0])
+  print("  -d [sCommit] dCommit  : diff two commit(if given one diff with current commit), output the result using html")
+  print("  -h|--help             : print this usage")
+  print("  -v|--version          : print the version")
+  print('''
 Examples:
     gitDiffTool -d 1234 6789       # compare tow commit
     gitDiffTool -d 1234            # compare current branch with given commit
     gitDiffTool -d develop         # compare current branch with given branch's name
-  '''
-  print "\n"
+  ''')
   os._exit(0)
 
 ''' global variable '''
@@ -259,15 +258,17 @@ def diffTool(commits):
         diffCommit(commits[0], commits[1]);
 
 def diffCommit(sCommit , dCommit):
+    print('Analysing..', end='', flush=True)
     result = os.popen("git diff --name-only " + sCommit + " " + dCommit).readlines()
     files = []
     for line in result[:len(result)]:
+        print(".", end='', flush=True),
         filePath = line.replace("\n", "")
         modifiedFile = ModifiedFile(filePath, sCommit, dCommit)
         files.append(modifiedFile)
         # _listAll(modifiedFile)
     generateHTML(files)
-    print('Analysis success! The result was generate in \'output\\index.html\'.');
+    print('\nAnalysis success! The result was generate in \'output\\index.html\'.');
     openHTML('file://' + os.getcwd() + '/output/index.html')
 
 def generateHTML(files):
@@ -305,7 +306,7 @@ def generateHTML(files):
     fout.close()
 
 def openHTML(file):
-    print 'opening:' + file
+    print('opening:' + file)
     webbrowser.open(file)
 
 ''' private logic '''
