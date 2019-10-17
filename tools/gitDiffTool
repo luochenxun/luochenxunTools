@@ -464,7 +464,7 @@ def _parseArgv():
                 return
             for o, a in opts:
                 if o == '-d':
-                    diffTool(argv_rest)
+                    diffTool(sys.argv[2:])
                 if o in ("-h", "--help"):
                     usage()
                 if o in ("-v", "--version"):
